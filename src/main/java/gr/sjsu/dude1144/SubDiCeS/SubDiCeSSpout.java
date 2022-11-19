@@ -64,7 +64,7 @@ public class SubDiCeSSpout extends BaseRichSpout
     {
         if (!initialized) 
 		{
-			ArrayList<SubDiCeSCommunity> SubDiCeSCcommunities = new ArrayList<>();
+			ArrayList<SubDiCeSCommunity> SubDiCeSCommunities = new ArrayList<>();
 			try
             {	
 				int count = 0;	
@@ -83,10 +83,10 @@ public class SubDiCeSSpout extends BaseRichSpout
 						set.add(comm[number]);
 					}
 
-					SubDiCeSCcommunities.add(new SubDiCeSCommunity(count++, set, comm));	
+					SubDiCeSCommunities.add(new SubDiCeSCommunity(count++, set, comm));	
 				}
 				gtcFileBR.close();
-				LOGGER.info(String.format("%d communities initialized...", SubDiCeSCcommunities.size()));
+				LOGGER.info(String.format("%d communities initialized...", SubDiCeSCommunities.size()));
 			} 
 			catch (IOException e) 
 			{
@@ -100,7 +100,8 @@ public class SubDiCeSSpout extends BaseRichSpout
 
 			try 
 			{
-				spoutputCollector.emit(ImmutableList.of(COMMUNITIES, SubDiCeSCcommunities));
+				for(SubDiCeSCommunity comm : SubDiCeSCommunities)
+					spoutputCollector.emit(new Values(COMMUNITIES, comm));
 			} 
 			catch(Exception e) 
 			{

@@ -1,18 +1,12 @@
 package gr.sjsu.dude1144.SubDiCeS;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.Map.Entry;
+
 
 import org.apache.log4j.Logger;
 import org.apache.storm.Config;
@@ -22,10 +16,6 @@ import org.apache.storm.generated.AlreadyAliveException;
 import org.apache.storm.generated.AuthorizationException;
 import org.apache.storm.generated.InvalidTopologyException;
 import org.apache.storm.topology.TopologyBuilder;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 
 public class SubDiCeS 
 {
@@ -60,7 +50,8 @@ public class SubDiCeS
 		TopologyBuilder builder = new TopologyBuilder();
 
 		builder.setSpout("SubDiCeS-Spout", new SubDiCeSSpout());
-		builder.setBolt("SubDiCes-Bolt", new SubDiCeSBolt()).customGrouping("SubDiCeS-Spout", new SubDiCeSGrouping());
+		builder.setBolt("SubDiCes-Bolt", new SubDiCeSBolt(), BOLTS).customGrouping("SubDiCeS-Spout", new SubDiCeSGrouping());
+		builder.setBolt("SubDiCeS-Pruning", new SubDiCeSPruningBolt()).allGrouping("SubDiCes-Bolt");
 
 		Config config = new Config();
 		config.put(Config.TOPOLOGY_DEBUG, false);
@@ -124,4 +115,6 @@ public class SubDiCeS
             return new byte[0];
         }
     }
+
+	
 }

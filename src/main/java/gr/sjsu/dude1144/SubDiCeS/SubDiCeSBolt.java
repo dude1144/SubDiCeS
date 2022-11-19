@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
@@ -21,14 +22,18 @@ public class SubDiCeSBolt extends BaseBasicBolt
     private static final Logger LOGGER = Logger.getLogger(SubDiCeSBolt.class);
 	
 	private static final long serialVersionUID = 2582648360999730523L;
-
-	private static final Values ELEMENT_VALUE = new Values(Integer.valueOf(1));
-	
-	private static final Values END_VALUE = new Values(SubDiCeSSpout.END);
 	
 	public static final String DEGREES_SUM = "DEGREES_SUM";
 	
 	public static final String COMMUNITY_DEGREES_SUM = "COMMUNITY_DEGREES_SUM";
+
+	public static Boolean logNodeDegrees = false;
+
+	private static Integer logging = 0;
+
+	private int boltID;
+
+	private int edgesSeen = 0;
 
     private List<SubDiCeSCommunity> communities;
 
@@ -43,13 +48,30 @@ public class SubDiCeSBolt extends BaseBasicBolt
 		{
 			if (input.getValue(1) != null) 
 			{
-				this.communities = (List<SubDiCeSCommunity>) input.getValue(1);
-				collector.emit(new Values(communities));
+				this.communities.add((SubDiCeSCommunity)input.getValue(1));
 				return;
 			}
 			
 			if (!input.getString(0).equals(SubDiCeSSpout.END)) 
 			{
+				if(edgesSeen == 0)
+				{
+					LOGGER.info("Bolt@" + boltID + ": " + this.communities.size() + " communities initialized");
+
+					String comms = "";
+
+					for(SubDiCeSCommunity comm : this.communities)
+					{
+						comms += (comms.equals("")) ? "[" : ", ";
+						comms += comm.getID();
+					}
+
+					comms += "]";
+
+					LOGGER.info(comms);
+				}
+				edgesSeen++;
+
 				String[] nodes = input.getString(0).split(SubDiCeS.GRAPH_FILE_DELIMITER);
 				// do not allow self loops
 				if (nodes[0].equals(nodes[1]))
@@ -60,12 +82,45 @@ public class SubDiCeSBolt extends BaseBasicBolt
 				nodeDegrees.merge(nodes[1], 1, Integer::sum);
 				
 				//DiCeS.addToCommRedisPRV(nodes, sync, async, redisCommunities); //add the nodes to the relevent communities
-				//collector.emit(ELEMENT_VALUE);
+				if(edgesSeen % SubDiCeS.WINDOW_SIZE == 0)
+					LOGGER.info("Bolt@" + boltID + ": Pruning after " + edgesSeen + "edges");
+				for(SubDiCeSCommunity comm : this.communities)
+				{
+					if(comm.contains(nodes[0]) || comm.contains(nodes[1]))
+						comm.processNodes(nodes[0], nodes[1], nodeDegrees.get(nodes[0]), nodeDegrees.get(nodes[1]));
+					if(edgesSeen % SubDiCeS.WINDOW_SIZE == 0)
+						comm.prune();
+
+				}
 			} 
 			else 
 			{
 				LOGGER.info("Received end message...");
-				collector.emit(END_VALUE);
+
+				if(logNodeDegrees && logging++ == 0)
+				{
+					List<String> s = this.nodeDegrees.entrySet().stream().map(e->{return "[" + e.getKey() + "," + e.getValue() + "]";}).collect(Collectors.toList());
+					LOGGER.info(s);
+				}
+
+				LOGGER.info("EDGES SEEN: " + edgesSeen);
+				collector.emit(new Values(new Integer(edgesSeen)));
+
+				for(SubDiCeSCommunity comm : communities)
+				{
+					switch(SubDiCeS.SIZE_DETERMINATION)
+					{
+						case GROUND_TRUTH:
+							collector.emit(new Values(comm.getGroundTruthSizeDetermination()));
+							break;
+						case DROP_TAIL:
+						default:
+							collector.emit(new Values(comm.getDropTailSizeDetermination()));
+							break;
+						
+					}
+				}
+				collector.emit(new Values(SubDiCeSSpout.END));
 			}
 		} 
 		catch (Exception e) 
@@ -86,6 +141,7 @@ public class SubDiCeSBolt extends BaseBasicBolt
 	{
 		this.communities = new ArrayList<>();
 		this.nodeDegrees = new HashMap<>();
+		this.boltID = context.getThisTaskId();
 		LOGGER.info("Initialized empty communities' list");
 		
 		// String communities = sync.get(SubDiCeSSpout.COMMUNITIES);
