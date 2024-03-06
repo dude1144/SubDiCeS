@@ -28,6 +28,10 @@ public class SubDiCeSPruningBolt extends BaseBasicBolt
 	public static Boolean END_INDICATOR = false;
 
 	public static int numEdgesProcessed = 0;
+
+	public static long startTime = 0;
+
+	public static long endTime = 0;
 	
 	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) 
@@ -51,6 +55,7 @@ public class SubDiCeSPruningBolt extends BaseBasicBolt
 			endCounter++;
 			if (endCounter == SubDiCeS.BOLTS) 
 			{
+				SubDiCeSPruningBolt.endTime = System.nanoTime();
 				LOGGER.info("ALL BOLTS FINISHED ");
 				f1score = f1scoreTotal / communityCounter;
 				LOGGER.info(String.format("F1 score: %f", f1score));

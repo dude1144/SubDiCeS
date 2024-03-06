@@ -108,17 +108,21 @@ public class SubDiCeSBolt extends BaseBasicBolt
 
 				for(SubDiCeSCommunity comm : communities)
 				{
+					double commF1Score = 0;
 					switch(SubDiCeS.SIZE_DETERMINATION)
 					{
 						case GROUND_TRUTH:
-							collector.emit(new Values(comm.getGroundTruthSizeDetermination()));
+							commF1Score = comm.getGroundTruthSizeDetermination();
 							break;
 						case DROP_TAIL:
 						default:
-							collector.emit(new Values(comm.getDropTailSizeDetermination()));
+							commF1Score = comm.getDropTailSizeDetermination();
 							break;
-						
 					}
+					if(Double.isNaN(commF1Score))
+						LOGGER.warn("TRIED TO EMIT NaN");
+					else
+						collector.emit(new Values(commF1Score));
 				}
 				collector.emit(new Values(SubDiCeSSpout.END));
 			}

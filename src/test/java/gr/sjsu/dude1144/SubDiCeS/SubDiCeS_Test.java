@@ -72,7 +72,7 @@ public class SubDiCeS_Test
     SubDiCeSCommunity.logCommunity = false;
     SubDiCeSCommunity.logPrunedCommunity = false;
 
-    long startTime = System.nanoTime();
+    
 
     subdices.execute(null);
 
@@ -81,12 +81,13 @@ public class SubDiCeS_Test
 			TimeUnit.MILLISECONDS.sleep(100);
 		}
     
-    long endTime = System.nanoTime();
+    long startTime = SubDiCeSPruningBolt.startTime;
+    long endTime = SubDiCeSPruningBolt.endTime;
 		long estimatedTime = (endTime - startTime)/1000L;
 
     assertEquals(expectedF1Score, SubDiCeSPruningBolt.f1score, 0.05);
-    LOGGER.info("Estimated Time: " + startTime);
-    LOGGER.info("Estimated Time: " + endTime);
+    LOGGER.info("Start Time: " + startTime);
+    LOGGER.info("End Time: " + endTime);
     LOGGER.info("Estimated Time: " + estimatedTime);
     LOGGER.info("Time per edge:  " + estimatedTime / (SubDiCeSPruningBolt.numEdgesProcessed)  + " microseconds (" + SubDiCeSPruningBolt.numEdgesProcessed + ") edges");   
   }
@@ -104,7 +105,7 @@ public class SubDiCeS_Test
     SubDiCeSCommunity.logCommunity = false;
     SubDiCeSCommunity.logPrunedCommunity = false;
 
-    long startTime = System.nanoTime();
+    
 
     subdices.execute(null);
 
@@ -112,14 +113,14 @@ public class SubDiCeS_Test
     {
 			TimeUnit.MILLISECONDS.sleep(100);
 		}
-
-    long endTime = System.nanoTime();
+    long startTime = SubDiCeSPruningBolt.startTime;
+    long endTime = SubDiCeSPruningBolt.endTime;
 		long estimatedTime = (endTime - startTime)/1000L;
 
     assertEquals(expectedF1Score, SubDiCeSPruningBolt.f1score, 0.05);
 
-    LOGGER.info("Estimated Time: " + startTime);
-    LOGGER.info("Estimated Time: " + endTime);
+    LOGGER.info("Start Time: " + startTime);
+    LOGGER.info("End Time: " + endTime);
     LOGGER.info("Estimated Time: " + estimatedTime);
     LOGGER.info("Time per edge:  " + estimatedTime / (SubDiCeSPruningBolt.numEdgesProcessed)  + " microseconds (" + SubDiCeSPruningBolt.numEdgesProcessed + ") edges");    
   }
@@ -137,7 +138,7 @@ public class SubDiCeS_Test
     SubDiCeSCommunity.logCommunity = false;
     SubDiCeSCommunity.logPrunedCommunity = false;
 
-    long startTime = System.nanoTime();
+    
 
     subdices.execute(null);
 
@@ -146,13 +147,14 @@ public class SubDiCeS_Test
 			TimeUnit.MILLISECONDS.sleep(100);
 		}
 
-    long endTime = System.nanoTime();
+    long startTime = SubDiCeSPruningBolt.startTime;
+    long endTime = SubDiCeSPruningBolt.endTime;
 		long estimatedTime = (endTime - startTime)/1000L;
 
     assertEquals(expectedF1Score, SubDiCeSPruningBolt.f1score, 0.05);
 
-    LOGGER.info("Estimated Time: " + startTime);
-    LOGGER.info("Estimated Time: " + endTime);
+    LOGGER.info("Start Time: " + startTime);
+    LOGGER.info("End Time: " + endTime);
     LOGGER.info("Estimated Time: " + estimatedTime);
     LOGGER.info("Time per edge:  " + estimatedTime / (SubDiCeSPruningBolt.numEdgesProcessed)  + " microseconds (" + SubDiCeSPruningBolt.numEdgesProcessed + ") edges");   
   }
@@ -170,7 +172,7 @@ public class SubDiCeS_Test
     SubDiCeSCommunity.logCommunity = false;
     SubDiCeSCommunity.logPrunedCommunity = false;
 
-    long startTime = System.nanoTime();
+    
 
     subdices.execute(null);
 
@@ -179,13 +181,14 @@ public class SubDiCeS_Test
 			TimeUnit.MILLISECONDS.sleep(100);
 		}
 
-    long endTime = System.nanoTime();
+    long startTime = SubDiCeSPruningBolt.startTime;
+    long endTime = SubDiCeSPruningBolt.endTime;
 		long estimatedTime = (endTime - startTime)/1000L;
 
     assertEquals(expectedF1Score, SubDiCeSPruningBolt.f1score, 0.05);
 
-    LOGGER.info("Estimated Time: " + startTime);
-    LOGGER.info("Estimated Time: " + endTime);
+    LOGGER.info("Start Time: " + startTime);
+    LOGGER.info("End Time: " + endTime);
     LOGGER.info("Estimated Time: " + estimatedTime);
     LOGGER.info("Time per edge:  " + estimatedTime / (SubDiCeSPruningBolt.numEdgesProcessed)  + " microseconds (" + SubDiCeSPruningBolt.numEdgesProcessed + ") edges");   
   }
@@ -203,7 +206,7 @@ public class SubDiCeS_Test
     SubDiCeSCommunity.logCommunity = false;
     SubDiCeSCommunity.logPrunedCommunity = false;
 
-    long startTime = System.nanoTime();
+    
 
     subdices.execute(null);
 
@@ -212,13 +215,14 @@ public class SubDiCeS_Test
 			TimeUnit.MILLISECONDS.sleep(100);
 		}
 
-    long endTime = System.nanoTime();
+    long startTime = SubDiCeSPruningBolt.startTime;
+    long endTime = SubDiCeSPruningBolt.endTime;
 		long estimatedTime = (endTime - startTime)/1000L;
 
     assertEquals(expectedF1Score, SubDiCeSPruningBolt.f1score, 0.05);
 
-    LOGGER.info("Estimated Time: " + startTime);
-    LOGGER.info("Estimated Time: " + endTime);
+    LOGGER.info("Start Time: " + startTime);
+    LOGGER.info("End Time: " + endTime);
     LOGGER.info("Estimated Time: " + estimatedTime);
     LOGGER.info("Time per edge:  " + estimatedTime / (SubDiCeSPruningBolt.numEdgesProcessed)  + " microseconds (" + SubDiCeSPruningBolt.numEdgesProcessed + ") edges");   
   }

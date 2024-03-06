@@ -111,6 +111,7 @@ public class SubDiCeSSpout extends BaseRichSpout
 			{
 				initialized = true;
 				LOGGER.info(String.format("LogTime: %s", System.currentTimeMillis()));
+				SubDiCeSPruningBolt.startTime = System.nanoTime();
 			}
 		}
         
